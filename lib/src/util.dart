@@ -20,13 +20,13 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 }*/
 
 /// Fetches user from Firebase and returns a promise
-Future<Map<String, dynamic>> fetchUser(String userId, {String role}) async {
+Future<Map<String, dynamic>> fetchUser(String userId, {String? role}) async {
   final doc =
       await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
   final data = doc.data();
 
-  data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
+  data!['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
   data['id'] = doc.id;
   data['lastSeen'] = data['lastSeen']?.millisecondsSinceEpoch;
   data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
@@ -128,5 +128,5 @@ Future<String> getOtherUserName(User firebaseUser, List<dynamic> userIds) async 
   final snapshot = await FirebaseFirestore.instance.collection('users').doc(e[0].toString()).get();
 
   final data = snapshot.data();
-  return '${data['firstName']} ${data['lastName']}';
+  return '${data!['firstName']} ${data['lastName']}';
 }

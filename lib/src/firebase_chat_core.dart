@@ -9,25 +9,25 @@ import 'util.dart';
 /// FirebaseChatCore.instance to aceess methods.
 class FirebaseChatCore {
   FirebaseChatCore._privateConstructor() {
-    FirebaseAuth.instance.authStateChanges().listen((User user) {
-      firebaseUser = user;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      firebaseUser = user!;
     });
   }
 
   /// Current logged in user in Firebase. Does not update automatically.
   /// Use [FirebaseAuth.authStateChanges] to listen to the state changes.
-  User firebaseUser = FirebaseAuth.instance.currentUser;
+  User firebaseUser = FirebaseAuth.instance.currentUser!;
 
   /// Singleton instance
   static final FirebaseChatCore instance =
       FirebaseChatCore._privateConstructor();
 
   // ignore: sort_constructors_first
-  FirebaseChatCore.instanceFor({@required FirebaseApp app}){
+  FirebaseChatCore.instanceFor({@required FirebaseApp? app}){
     // ignore: prefer_asserts_in_initializer_lists
     assert(app != null);
 
-    firebaseUser = FirebaseAuth.instanceFor(app: app).currentUser;
+    firebaseUser = FirebaseAuth.instanceFor(app: app!).currentUser!;
   }
 
   /// Creates a chat group room with [users]. Creator is automatically
@@ -35,15 +35,15 @@ class FirebaseChatCore {
   /// a group name. Add an optional [imageUrl] that will be a group avatar
   /// and [metadata] for any additional custom data.
   Future<types.Room> createGroupRoom({
-    String imageUrl,
-    Map<String, dynamic> metadata,
-    @required String name,
-    @required List<types.User> users,
+    String? imageUrl,
+    Map<String, dynamic>? metadata,
+    @required String? name,
+    @required List<types.User>? users,
   }) async {
     if (firebaseUser == null) return Future.error('User does not exist');
 
     final currentUser = await fetchUser(firebaseUser.uid);
-    final roomUsers = [types.User.fromJson(currentUser)] + users;
+    final roomUsers = [types.User.fromJson(currentUser)] + users!;
 
     final room = await FirebaseFirestore.instance.collection('rooms').add({
       'createdAt': FieldValue.serverTimestamp(),
@@ -57,7 +57,7 @@ class FirebaseChatCore {
         {},
         (previousValue, user) => {
           ...previousValue,
-          user.id: user.role?.toShortString(),
+          user.id: user.role!.toShortString(),
         },
       ),
     });
@@ -69,6 +69,7 @@ class FirebaseChatCore {
       name: name,
       type: types.RoomType.group,
       users: roomUsers,
+      userIds: const []
     );
   }
 
@@ -76,7 +77,7 @@ class FirebaseChatCore {
   /// custom data.
   Future<types.Room> createRoom(
     types.User otherUser, {
-    Map<String, dynamic> metadata,
+    Map<String, dynamic>? metadata,
   }) async {
     if (firebaseUser == null) return Future.error('User does not exist');
 
@@ -119,6 +120,7 @@ class FirebaseChatCore {
       metadata: metadata,
       type: types.RoomType.direct,
       users: users,
+      userIds: const []
     );
   }
 
@@ -247,19 +249,23 @@ class FirebaseChatCore {
         id: '',
         partialText: partialMessage,
       );
+    }else{
+      message = types.TextMessage.fromPartial(
+        author: const types.User(id: ''),
+        id: '',
+        partialText: const types.PartialText(text: ''),
+      );
     }
 
-    if (message != null) {
-      final messageMap = message.toJson();
-      messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
-      messageMap['authorId'] = firebaseUser.uid;
-      messageMap['createdAt'] = FieldValue.serverTimestamp();
-      messageMap['updatedAt'] = FieldValue.serverTimestamp();
+    final messageMap = message.toJson();
+    messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+    messageMap['authorId'] = firebaseUser.uid;
+    messageMap['createdAt'] = FieldValue.serverTimestamp();
+    messageMap['updatedAt'] = FieldValue.serverTimestamp();
 
-      await FirebaseFirestore.instance
-          .collection('rooms/$roomId/messages')
-          .add(messageMap);
-    }
+    await FirebaseFirestore.instance
+        .collection('rooms/$roomId/messages')
+        .add(messageMap);
   }
 
   /// Updates a message in the Firestore. Accepts any message and a
