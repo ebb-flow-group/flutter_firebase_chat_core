@@ -53,7 +53,7 @@ Future<types.Room> processRoomDocument(
   DocumentSnapshot doc,
   User firebaseUser,
 ) async {
-  final data = doc.data();
+  final data = doc.data() as Map<String, dynamic>;
 
   data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
   data['id'] = doc.id;
@@ -78,7 +78,7 @@ Future<types.Room> processRoomDocument(
       );
     }
 
-  if (type == types.RoomType.direct.toShortString()) {
+  if (type == types.RoomType.direct.toSShortString()) {
     try {
       final otherUser = users.firstWhere(
         (u) => u['id'] != firebaseUser.uid,

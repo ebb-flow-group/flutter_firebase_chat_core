@@ -50,7 +50,7 @@ class FirebaseChatCore {
       'imageUrl': imageUrl,
       'metadata': metadata,
       'name': name,
-      'type': types.RoomType.group.toShortString(),
+      'type': types.RoomType.group.toSShortString(),
       'updatedAt': FieldValue.serverTimestamp(),
       'userIds': roomUsers.map((u) => u.id).toList(),
       'userRoles': roomUsers.fold<Map<String, String>>(
@@ -108,7 +108,7 @@ class FirebaseChatCore {
       'imageUrl': otherUser.imageUrl,
       'metadata': metadata,
       'name': '${otherUser.firstName} ${otherUser.lastName}',
-      'type': types.RoomType.direct.toShortString(),
+      'type': types.RoomType.direct.toSShortString(),
       'updatedAt': FieldValue.serverTimestamp(),
       'userIds': users.map((u) => u.id).toList(),
       'userRoles': null,
