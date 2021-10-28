@@ -72,7 +72,7 @@ Future<types.Room> processRoomDocument(
         userIds.map(
               (userId) => fetchUser(
             userId as String,
-            role: userRoles[userId] as String,
+            role: userRoles[userId] == null ? '' : userRoles[userId] as String,
           ),
         ),
       );
