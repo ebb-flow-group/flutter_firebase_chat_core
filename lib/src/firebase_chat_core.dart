@@ -121,7 +121,8 @@ class FirebaseChatCore {
       type: types.RoomType.direct,
       users: users,
       name: '${otherUser.firstName ?? ''} ${otherUser.lastName ?? ''}',
-      imageUrl: otherUser.imageUrl
+      imageUrl: otherUser.imageUrl,
+      userIds: users.map((u) => u.id).toList()
     );
   }
 
