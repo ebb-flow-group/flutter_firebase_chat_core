@@ -65,7 +65,7 @@ Future<types.Room> processRoomDocument(
   final userIds = data['userIds'] as List<dynamic>;
   final userRoles = data['userRoles'] == null ? {} : data['userRoles'] as Map<String, dynamic>;
   data['name'] = await getOtherUserName(firebaseUser, userIds);
-  final users = [];
+  var users = [];
   users = await Future.wait(
         userIds.map(
               (userId) => fetchUser(
