@@ -93,6 +93,8 @@ class FirebaseChatCore {
         if (room.type == types.RoomType.group) return false;
 
         final userIds = room.users.map((u) => u.id);
+        print('IS USER PRESENT: ${userIds.contains(firebaseUser.uid)}');
+        print('IS OTHER USER PRESENT: ${userIds.contains(otherUser.id)}');
         return userIds.contains(firebaseUser.uid) &&
             userIds.contains(otherUser.id);
       });
