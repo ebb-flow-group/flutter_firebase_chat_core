@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 /// Extension with one [toShortString] method
 /*extension RoleToShortString on types.Role {
@@ -65,6 +66,9 @@ Future<types.Room> processRoomDocument(
   final userIds = data['userIds'] as List<dynamic>;
   final userRoles = data['userRoles'] == null ? {} : data['userRoles'] as Map<String, dynamic>;
   data['name'] = await getOtherUserName(firebaseUser, userIds);
+  data['metadata'] = {
+    'other_user_type': await getOtherUserType(firebaseUser, userIds)
+  };
   var users = [];
   users = await Future.wait(
         userIds.map(
@@ -125,4 +129,16 @@ Future<String> getOtherUserName(User firebaseUser, List<dynamic> userIds) async 
 
   final data = snapshot.data();
   return '${data!['firstName']} ${data['lastName']}';
+}
+
+Future<String> getOtherUserType(User firebaseUser, List<dynamic> userIds) async {
+  print('CURRENT USER ID FOR TYPE: ${firebaseUser.uid}');
+  print('SELECTED CHAT USER FOR TYPE: $userIds');
+
+  final e = userIds.where((element) => element != firebaseUser.uid).toList();
+
+  final snapshot = await FirebaseFirestore.instance.collection('users').doc(e[0].toString()).get();
+
+  final data = snapshot.data();
+  return '${data!['user_type']}';
 }
