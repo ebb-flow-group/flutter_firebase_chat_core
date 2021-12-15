@@ -116,6 +116,8 @@ Future<types.Room> processRoomDocument(
     data['lastMessages'] = lastMessages;
   }
 
+  data['lastMessages'] = await getLastMessageOfRoom(doc.id);
+
   return types.Room.fromJson(data);
 }
 
@@ -141,4 +143,10 @@ Future<String> getOtherUserType(User firebaseUser, List<dynamic> userIds) async 
 
   final data = snapshot.data();
   return '${data!['user_type']}';
+}
+
+Future<List<Map<String, dynamic>>> getLastMessageOfRoom(String roomId) async{
+  final collection = await FirebaseFirestore.instance.collection('rooms').doc(roomId).collection('messages').get();
+
+  return [collection.docs[0].data() as Map<String, dynamic>];
 }
