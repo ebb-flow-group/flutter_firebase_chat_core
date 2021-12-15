@@ -153,11 +153,11 @@ Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
       // .orderBy('updatedAt', descending: true)
       .get();
 
-  collection.docs.sort((a, b){
+  /*collection.docs.sort((a, b){
     var aData = a.data() as Map<String, dynamic>;
     var bData = b.data() as Map<String, dynamic>;
     return int.parse(aData['createdAt'].toString()).compareTo(int.parse(bData['createdAt'].toString()));
-  });
+  });*/
 
   return collection.docs[0].data() as Map<String, dynamic>;
 }
