@@ -146,7 +146,12 @@ Future<String> getOtherUserType(User firebaseUser, List<dynamic> userIds) async 
 }
 
 Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
-  final collection = await FirebaseFirestore.instance.collection('rooms').doc(roomId).collection('messages').get();
+  final collection = await FirebaseFirestore.instance
+      .collection('rooms')
+      .doc(roomId)
+      .collection('messages')
+      .orderBy('updatedAt', descending: true)
+      .get();
 
   return collection.docs[0].data() as Map<String, dynamic>;
 }
