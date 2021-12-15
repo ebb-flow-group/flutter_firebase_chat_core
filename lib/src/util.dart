@@ -66,9 +66,6 @@ Future<types.Room> processRoomDocument(
   final userIds = data['userIds'] as List<dynamic>;
   final userRoles = data['userRoles'] == null ? {} : data['userRoles'] as Map<String, dynamic>;
   data['name'] = await getOtherUserName(firebaseUser, userIds);
-  data['metadata'] = {
-    'other_user_type': await getOtherUserType(firebaseUser, userIds)
-  };
   var users = [];
   users = await Future.wait(
         userIds.map(
@@ -116,7 +113,10 @@ Future<types.Room> processRoomDocument(
     data['lastMessages'] = lastMessages;
   }
 
-  data['lastMessages'] = await getLastMessageOfRoom(doc.id);
+  data['metadata'] = {
+    'other_user_type': await getOtherUserType(firebaseUser, userIds),
+    'last_messages': await getLastMessageOfRoom(doc.id)
+  };
 
   return types.Room.fromJson(data);
 }
@@ -145,8 +145,8 @@ Future<String> getOtherUserType(User firebaseUser, List<dynamic> userIds) async 
   return '${data!['user_type']}';
 }
 
-Future<List<Map<String, dynamic>>> getLastMessageOfRoom(String roomId) async{
+Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
   final collection = await FirebaseFirestore.instance.collection('rooms').doc(roomId).collection('messages').get();
 
-  return [collection.docs[0].data() as Map<String, dynamic>];
+  return collection.docs[0].data() as Map<String, dynamic>;
 }
