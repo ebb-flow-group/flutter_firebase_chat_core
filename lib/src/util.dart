@@ -150,7 +150,7 @@ Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
       .collection('rooms')
       .doc(roomId)
       .collection('messages')
-      // .orderBy('updatedAt', descending: true)
+      .orderBy('updatedAt', descending: true)
       .get();
 
   /*collection.docs.sort((a, b){
