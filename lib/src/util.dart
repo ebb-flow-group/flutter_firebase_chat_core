@@ -160,5 +160,5 @@ Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
     return int.parse(aData['createdAt'].toString()).compareTo(int.parse(bData['createdAt'].toString()));
   });*/
 
-  return collection.docs[0].data() as Map<String, dynamic>;
+  return collection.docs.isNotEmpty ? collection.docs[0].data() as Map<String, dynamic> : {};
 }
