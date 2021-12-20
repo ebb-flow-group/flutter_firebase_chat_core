@@ -130,7 +130,7 @@ Future<String> getOtherUserName(User firebaseUser, List<dynamic> userIds) async 
   final snapshot = await FirebaseFirestore.instance.collection('users').doc(e[0].toString()).get();
 
   final data = snapshot.data();
-  return '${data!['firstName']} ${data['lastName']}';
+  return '${data!['firstName'] ?? ''} ${data['lastName'] ?? ''}';
 }
 
 Future<String> getOtherUserType(User firebaseUser, List<dynamic> userIds) async {
