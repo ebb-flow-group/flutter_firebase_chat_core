@@ -228,36 +228,42 @@ class FirebaseChatCore {
         author: types.User(id: firebaseUser.uid),
         id: '',
         partialCustom: partialMessage,
+        status: types.Status.sent
       );
     } else if (partialMessage is types.PartialFile) {
       message = types.FileMessage.fromPartial(
         author: types.User(id: firebaseUser.uid),
         id: '',
         partialFile: partialMessage,
+        status: types.Status.sent
       );
     } else if (partialMessage is types.PartialVoice) {
       message = types.VoiceMessage.fromPartial(
         author: types.User(id: firebaseUser.uid),
         id: '',
         partialVoice: partialMessage,
+        status: types.Status.sent
       );
     } else if (partialMessage is types.PartialImage) {
       message = types.ImageMessage.fromPartial(
         author: types.User(id: firebaseUser.uid),
         id: '',
         partialImage: partialMessage,
+        status: types.Status.sent
       );
     } else if (partialMessage is types.PartialText) {
       message = types.TextMessage.fromPartial(
         author: types.User(id: firebaseUser.uid),
         id: '',
         partialText: partialMessage,
+        status: types.Status.sent
       );
     }else{
       message = types.TextMessage.fromPartial(
         author: const types.User(id: ''),
         id: '',
         partialText: const types.PartialText(text: ''),
+        status: types.Status.sent
       );
     }
 

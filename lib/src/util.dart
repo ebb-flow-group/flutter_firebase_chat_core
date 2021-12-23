@@ -115,7 +115,8 @@ Future<types.Room> processRoomDocument(
 
   data['metadata'] = {
     'other_user_type': await getOtherUserType(firebaseUser, userIds),
-    'last_messages': await getLastMessageOfRoom(doc.id)
+    'last_messages': await getLastMessageOfRoom(doc.id),
+    'unread_message_count': await getUnreadMessageCount(doc.id)
   };
 
   return types.Room.fromJson(data);
@@ -161,4 +162,15 @@ Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
   });*/
 
   return collection.docs.isNotEmpty ? collection.docs[0].data() as Map<String, dynamic> : {};
+}
+
+Future<int> getUnreadMessageCount(String roomId) async{
+  final collection = await FirebaseFirestore.instance
+      .collection('rooms')
+      .doc(roomId)
+      .collection('messages')
+      .where('status', isEqualTo: 'sent')
+      .get();
+
+  return collection.docs.length;
 }
