@@ -60,7 +60,7 @@ Future<types.Room> processRoomDocument(
   data['id'] = doc.id;
   data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
 
-  var imageUrl = data['imageUrl'] as String;
+  var imageUrl = data['imageUrl'] == null ? '' : data['imageUrl'] as String;
   var name = data['name'] as String;
   final type = data['type'] as String;
   final userIds = data['userIds'] as List<dynamic>;
