@@ -151,17 +151,16 @@ Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
       .collection('rooms')
       .doc(roomId)
       .collection('messages')
+      .orderBy('createdAt', descending: true)
       .get();
 
-  // .orderBy('updatedAt', descending: true)
-
-  collection.docs.sort((a, b){
+  /*collection.docs.sort((a, b){
     var aData = a.data() as Map<String, dynamic>;
     var bData = b.data() as Map<String, dynamic>;
     Timestamp aTimestamp = aData['createdAt'] as Timestamp;
     Timestamp bTimestamp = bData['createdAt'] as Timestamp;
     return aTimestamp.compareTo(bTimestamp);
-  });
+  });*/
 
   return collection.docs.isNotEmpty ? collection.docs[0].data() as Map<String, dynamic> : {};
 }
