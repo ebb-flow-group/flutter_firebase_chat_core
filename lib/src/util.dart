@@ -158,7 +158,9 @@ Future<Map<String, dynamic>> getLastMessageOfRoom(String roomId) async{
   collection.docs.sort((a, b){
     var aData = a.data() as Map<String, dynamic>;
     var bData = b.data() as Map<String, dynamic>;
-    return int.parse(aData['createdAt'].toString()).compareTo(int.parse(bData['createdAt'].toString()));
+    Timestamp aTimestamp = aData['createdAt'] as Timestamp;
+    Timestamp bTimestamp = bData['createdAt'] as Timestamp;
+    return aTimestamp.compareTo(bTimestamp);
   });
 
   return collection.docs.isNotEmpty ? collection.docs[0].data() as Map<String, dynamic> : {};
